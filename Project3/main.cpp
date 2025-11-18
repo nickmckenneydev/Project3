@@ -9,5 +9,9 @@ int main(int argc, char* argv[])
 		return EXIT_FAILURE;
 	}
 
+	SDL_Window* window = SDL_CreateWindow("HIIII", 320, 240, SDL_WINDOW_RESIZABLE|SDL_WINDOW_BORDERLESS);
+	SDL_Delay(5000);
+	SDL_Quit();
+
 	return 0;
 }
