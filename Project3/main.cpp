@@ -14,11 +14,15 @@ int main()
 	window = SDL_CreateWindow("wwwwww", 320, 240, SDL_WINDOW_RESIZABLE);
 
 	SDL_Event event;
-	
-	while (SDL_PollEvent(&event)) {
+	SDL_zero(event);//init event quieie
+	event.type = event.key;
+	while (SDL_PollEvent(&event)) { //reading event from queue
 		switch (event.type) {
-		case SDL_EVENT_QUIT:
+		case SDL_EVENT_KEY_DOWN:
 			SDL_Quit();
+		default:
+			SDL_Log("Unhandled Event!");
+			break;
 		}
 		return SDL_APP_CONTINUE;
 	}
