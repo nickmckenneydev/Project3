@@ -18,7 +18,7 @@ int main()
 	while (game_is_still_running) {
 
 		while (SDL_PollEvent(&event)) { //reading event from queue. Repop event
-			SDL_Log("KEYBOARD STATE %p and %d\n", keys,*keys);
+			//SDL_Log("KEYBOARD STATE %p and % d\n", keys,*keys);
 			switch (event.type) {
 			case SDL_EVENT_KEY_DOWN:
 				if (event.key.key == 'q') {
@@ -29,13 +29,15 @@ int main()
 				}
 			
 				SDL_Log("We got a key event. :%d\n",event.key.key);
-					
+			
+
 				
 
 			default:
 				if (keys[15] == true) {
 					SDL_Log("Unhandled Event!");
 				}
+				SDL_Log("We got a mouse q event. :%d\n", event.button.clicks);
 			}
 		}
 	}
