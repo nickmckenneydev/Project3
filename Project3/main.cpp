@@ -10,11 +10,13 @@ int main()
 	int i = 50;
 	
 	bool game_is_still_running = true;
-	SDL_WarpMouseInWindow(window, 320 / 2, 240 / 2);
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+
+	SDL_WarpMouseInWindow(window, w/2, h / 2);
 	float x, y;
 
 	SDL_Event event;
-	SDL_Scancode scanCode;
 	SDL_zero(event);//init event quieie
 	const bool *keys = SDL_GetKeyboardState(nullptr);//Return a pointer to an internal managed array
 	SDL_MouseButtonFlags mouse;
