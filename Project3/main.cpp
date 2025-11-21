@@ -11,13 +11,15 @@ int main()
 	
 	bool game_is_still_running = true;
 	SDL_WarpMouseInWindow(window, 320 / 2, 240 / 2);
+	float x, y;
+
 	SDL_Event event;
 	SDL_Scancode scanCode;
 	SDL_zero(event);//init event quieie
 	const bool *keys = SDL_GetKeyboardState(nullptr);//Return a pointer to an internal managed array
-	float x, y;
-	while (game_is_still_running) {
+	SDL_MouseButtonFlags mouse;
 
+	while (game_is_still_running) {
 		while (SDL_PollEvent(&event)) { //reading event from queue. Repop event
 			//SDL_Log("KEYBOARD STATE %p and % d\n", keys,*keys);
 			switch (event.type) {
@@ -36,20 +38,16 @@ int main()
 				{
 					SDL_Log("button left clicked %d", event.button.button);
 				}
-			default:
-				SDL_MouseButtonFlags mouse = SDL_GetMouseState(&x, &y);
-				i++;
-				if (i > 200) {
-					i = 50;
-				}
-				SDL_WarpMouseInWindow(window, i, i);
-				SDL_Log("x,x %f %f", event.pmotion.x, x);
-				if (keys[15] == true) {
-					SDL_Log("Unhandled Event!");
-				}
+			default:	
+				SDL_Log("Unhandled Event!");	
 			}
+
 		}
+		mouse = SDL_GetMouseState(&x, &y);
+		SDL_Log("x,y %f %f %d", x, y,mouse);
+
 	}
+
 	
 	return 0;
 }
