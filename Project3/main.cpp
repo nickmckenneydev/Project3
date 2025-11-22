@@ -2,14 +2,24 @@
 #include <string>
 #include <vector>
 struct Particles {
-	std::vector<SDL_FPoint> mPoints;
+
+	struct Particle {
+		float speed;
+		float velocity;
+	};
+
+	std::vector<SDL_FPoint>  mPoint;
+	std::vector<Particle> mParticles;
+
 	Particles(size_t numberOfPoints) {
 		for (int i = 0; i < numberOfPoints; i++) {
-			SDL_FPoint point{
-				i * 2.0f,
-				10.0f
+			Particle particle;
+			SDL_FPoint point = SDL_FPoint{
+				static_cast<float>(SDL_rand(320)),
+				static_cast<float>(SDL_rand(10)),
 			};
-			mPoints.push_back(point);
+			mParticles.push_back(point);
+			mParticles.push_back(particle);
 		}
 	}
 };
@@ -25,13 +35,15 @@ struct SDLApplication {//state is global to my application
 	int color;
 	int color2;
 	float x, y;
-	Particles mParticles{ 100 };
+	Particles mParticleSystem{ 100 };
+	
 	SDLApplication(const char* title) { //constructor
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
 		
 		mRenderer = SDL_CreateRenderer(mWindow, "opengl");
-		
+		Particles mParticleSystem{ 100 };
+
 		if (mRenderer == nullptr)
 		{
 
@@ -90,9 +102,8 @@ struct SDLApplication {//state is global to my application
 		}
 	}
 	void Update(){
-		for (int i = 0; i < mParticles.mPoints.size(); i++) {
-			mParticles.mPoints[i].y+=0.1f;
-			mParticles.mPoints[i].x += 0.1f;
+		for (int i = 0; i < mParticleSystem.mParticles.size(); i++) {
+			mParticleSystem.mParticles[i].mPoint.y+=0.1f;
 		}
 	
 	}
@@ -109,7 +120,7 @@ struct SDLApplication {//state is global to my application
 		100
 		};
 		SDL_RenderRect(mRenderer, &rect);
-		SDL_RenderPoints(mRenderer, mParticles.mPoints.data(), mParticles.mPoints.size());
+		SDL_RenderPoints(mRenderer, mParticleSystem.mParticles.data(), mParticleSystem.mParticles.size());
 		SDL_RenderPresent(mRenderer);
 	
 	}
