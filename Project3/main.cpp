@@ -15,7 +15,7 @@ struct SDLApplication {//state is global to my application
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
 		
-		mRenderer = SDL_CreateRenderer(mWindow, NULL);
+		mRenderer = SDL_CreateRenderer(mWindow, "opengl");
 		if (mRenderer == nullptr)
 		{
 
@@ -24,6 +24,11 @@ struct SDLApplication {//state is global to my application
 			SDL_Log("Renderer is %s: ",SDL_GetRendererName(mRenderer));
 			SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255); 
 			SDL_RenderClear(mRenderer);
+			for (int i = 0; i < SDL_GetNumRenderDrivers(); i++)
+			{
+				SDL_Log("%d. %s", i + i, SDL_GetRenderDriver(i));
+			}
+			SDL_Delay(5000);
 		}
 
 	
