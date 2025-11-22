@@ -1,9 +1,9 @@
 #include <SDL3/SDL.h>
-#include <SDL3/SDL_events.h>
-#include <SDL3/SDL_scancode.h>
-struct SDLApplication {
+#include <string>
+struct SDLApplication {//state is global to my application
 	SDL_Window* mWindow;
 	bool mGameRunning = true;
+	unsigned int lastTime = 0;
 	SDLApplication(const char* title) {
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
@@ -11,7 +11,12 @@ struct SDLApplication {
 	~SDLApplication() {//Destructor
 		SDL_Quit();
 	}
-	void Tick() {//Loop One Iteration
+	void Tick() {
+		Input();
+		Update();
+		Render();
+	}
+	void Input() {//Loop One Iteration
 		SDL_Event event;
 			while (SDL_PollEvent(&event)) { //reading event from queue. Repop event
 				//SDL_Log("KEYBOARD STATE %p and % d\n", keys,*keys);
@@ -51,13 +56,28 @@ struct SDLApplication {
 			SDL_Log("x,y: %f,%f", x, y);
 		}
 	}
+	void Update(){}
+	void Render(){}
 	void MainLoop() {
+		Uint64 fps = 0;
 		while (mGameRunning) {
+			Uint64 currentTick = SDL_GetTicks();
 			Tick();
+			SDL_Delay(16);
+			fps ++;
+			
+			Uint64 deltaTime = SDL_GetTicks() -currentTick;
+			if (currentTick > lastTime + 1000) {
+				lastTime = currentTick;
+			
+				std::string title;
+				title += "Nicks - FPS: " + std::to_string(fps);
+				SDL_SetWindowTitle(mWindow, title.c_str());
+				fps = 0;
+			}
 		}
 	}
 };
-
 
 int main(int argc,char* argv[])
 {
