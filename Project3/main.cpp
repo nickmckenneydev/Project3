@@ -6,6 +6,11 @@ struct SDLApplication {//state is global to my application
 	unsigned int lastTime = 0;
 	SDL_Surface* mSurface;
 	SDL_Renderer* mRenderer;
+	SDL_Event event;
+	SDL_FRect fillRet;
+	int color;
+	int color2;
+	float x, y;
 	SDLApplication(const char* title) {//constructor
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
@@ -15,6 +20,12 @@ struct SDLApplication {//state is global to my application
 		{
 
 		}
+		else {
+			SDL_Log("Renderer is %s: ",SDL_GetRendererName(mRenderer));
+			SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255); 
+			SDL_RenderClear(mRenderer);
+		}
+
 	
 	}
 	~SDLApplication() {//Destructor
@@ -26,7 +37,7 @@ struct SDLApplication {//state is global to my application
 		Render();
 	}
 	void Input() {//Loop One Iteration
-		SDL_Event event;
+		
 			while (SDL_PollEvent(&event)) { //reading event from queue. Repop event
 				//SDL_Log("KEYBOARD STATE %p and % d\n", keys,*keys);
 				switch (event.type) {
@@ -35,27 +46,36 @@ struct SDLApplication {//state is global to my application
 					break;
 				case SDL_EVENT_KEY_DOWN:
 					SDL_Log("We got a key event. :%d\n", event.key.key);
+					if (event.key.key == 'b') {
+						color = event.key.key;
+						color = color * 10;
+					}
 					if (event.key.key == 'q') {
 						SDL_Log("We got a key event.");
 						mGameRunning = false;
 						SDL_Quit();
 						break; 
 					}
+				case SDL_EVENT_MOUSE_MOTION:
+					color = event.motion.x;
+					color2 = event.motion.y;
 				
 				default:
 					SDL_Log("Unhandled Event!");
-				
+					
 			}
-			float x, y;
+		
 			SDL_MouseButtonFlags mouse = SDL_GetMouseState(&x, &y);
-			SDL_Log("x,y: %f,%f", x, y);
+			
 		}
 	}
 	void Update(){}
 	void Render(){
-		SDL_SetRenderDrawColor(mRenderer, 0x00, 0xAA, 0xff, 0xff);
-		SDL_RenderClear(mRenderer);
+		SDL_Log("x,y %f %f", x, y);
+		SDL_SetRenderDrawColor(mRenderer, y, x, 0, 255); 
+		SDL_RenderPoint(mRenderer, x, y);
 		SDL_RenderPresent(mRenderer);
+	
 	}
 	void MainLoop() {
 		Uint64 fps = 0;
