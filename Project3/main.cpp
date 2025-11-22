@@ -5,15 +5,21 @@ struct SDLApplication {//state is global to my application
 	bool mGameRunning = true;
 	unsigned int lastTime = 0;
 	SDL_Surface* mSurface;
-	SDLApplication(const char* title) {
+	SDLApplication(const char* title) {//constructor
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
-		mSurface = SDL_LoadBMP("./test.bmp");
-		if (mSurface == nullptr)
+		
+		SDL_Renderer *mRenderer = SDL_CreateRenderer(mWindow, NULL);
+		if (mRenderer == nullptr)
 		{
 
 		}
-		
+		//mSurface = SDL_LoadBMP("./test.bmp");//Collection of pixels
+		//if (mSurface == nullptr)
+		//{
+
+		//}
+		//
 
 
 	}
