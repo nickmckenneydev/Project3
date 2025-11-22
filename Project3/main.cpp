@@ -5,23 +5,17 @@ struct SDLApplication {//state is global to my application
 	bool mGameRunning = true;
 	unsigned int lastTime = 0;
 	SDL_Surface* mSurface;
+	SDL_Renderer* mRenderer;
 	SDLApplication(const char* title) {//constructor
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
 		
-		SDL_Renderer *mRenderer = SDL_CreateRenderer(mWindow, NULL);
+		mRenderer = SDL_CreateRenderer(mWindow, NULL);
 		if (mRenderer == nullptr)
 		{
 
 		}
-		//mSurface = SDL_LoadBMP("./test.bmp");//Collection of pixels
-		//if (mSurface == nullptr)
-		//{
-
-		//}
-		//
-
-
+	
 	}
 	~SDLApplication() {//Destructor
 		SDL_Quit();
@@ -59,13 +53,9 @@ struct SDLApplication {//state is global to my application
 	}
 	void Update(){}
 	void Render(){
-		SDL_Surface* windowSurface = SDL_GetWindowSurface(mWindow);
-		if (nullptr != windowSurface) {
-
-			SDL_BlitSurface(mSurface, nullptr, windowSurface, nullptr);
-			SDL_UpdateWindowSurface(mWindow);
-
-		}
+		SDL_SetRenderDrawColor(mRenderer, 0x00, 0xAA, 0xff, 0xff);
+		SDL_RenderClear(mRenderer);
+		SDL_RenderPresent(mRenderer);
 	}
 	void MainLoop() {
 		Uint64 fps = 0;
