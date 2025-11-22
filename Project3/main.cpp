@@ -4,9 +4,18 @@ struct SDLApplication {//state is global to my application
 	SDL_Window* mWindow;
 	bool mGameRunning = true;
 	unsigned int lastTime = 0;
+	SDL_Surface* mSurface;
 	SDLApplication(const char* title) {
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
+		mSurface = SDL_LoadBMP("./test.bmp");
+		if (mSurface == nullptr)
+		{
+
+		}
+		
+
+
 	}
 	~SDLApplication() {//Destructor
 		SDL_Quit();
@@ -30,7 +39,7 @@ struct SDLApplication {//state is global to my application
 						SDL_Log("We got a key event.");
 						mGameRunning = false;
 						SDL_Quit();
-						break;
+						break; 
 					}
 				
 				default:
@@ -43,7 +52,15 @@ struct SDLApplication {//state is global to my application
 		}
 	}
 	void Update(){}
-	void Render(){}
+	void Render(){
+		SDL_Surface* windowSurface = SDL_GetWindowSurface(mWindow);
+		if (nullptr != windowSurface) {
+
+			SDL_BlitSurface(mSurface, nullptr, windowSurface, nullptr);
+			SDL_UpdateWindowSurface(mWindow);
+
+		}
+	}
 	void MainLoop() {
 		Uint64 fps = 0;
 		while (mGameRunning) {
