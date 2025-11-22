@@ -32,21 +32,7 @@ struct SDLApplication {//state is global to my application
 						SDL_Quit();
 						break;
 					}
-				case SDL_EVENT_MOUSE_BUTTON_DOWN:
-					if (event.button.button == SDL_BUTTON_LEFT)
-					{
-						SDL_Log("button left clicked %d", event.button.button);
-					}
-					if (event.button.button == SDL_BUTTON_MIDDLE)
-					{
-						SDL_Log("button middle clicked %d", event.button.button);
-					}
-					if (event.button.button == SDL_BUTTON_RIGHT)
-					{
-						SDL_Log("button right clicked %d", event.button.button);
-					}
-					SDL_Log("We got a mouse q event. :%d\n", event.button.clicks);
-					break;
+				
 				default:
 					SDL_Log("Unhandled Event!");
 				
