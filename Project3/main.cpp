@@ -1,6 +1,20 @@
 #include <SDL3/SDL.h>
 #include <string>
+#include <vector>
+struct Particles {
+	std::vector<SDL_FPoint> mPoints;
+	Particles(size_t numberOfPoints) {
+		for (int i = 0; i < numberOfPoints; i++) {
+			SDL_FPoint point{
+				i * 2.0f,
+				10.0f
+			};
+			mPoints.push_back(point);
+		}
+	}
+};
 struct SDLApplication {//state is global to my application
+
 	SDL_Window* mWindow;
 	bool mGameRunning = true;
 	unsigned int lastTime = 0;
@@ -11,24 +25,25 @@ struct SDLApplication {//state is global to my application
 	int color;
 	int color2;
 	float x, y;
-	SDLApplication(const char* title) {//constructor
+	Particles mParticles{ 100 };
+	SDLApplication(const char* title) { //constructor
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
 		
 		mRenderer = SDL_CreateRenderer(mWindow, "opengl");
+		
 		if (mRenderer == nullptr)
 		{
 
 		}
 		else {
 			SDL_Log("Renderer is %s: ",SDL_GetRendererName(mRenderer));
-			SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255); 
-			SDL_RenderClear(mRenderer);
+			
 			for (int i = 0; i < SDL_GetNumRenderDrivers(); i++)
 			{
 				SDL_Log("%d. %s", i + i, SDL_GetRenderDriver(i));
 			}
-			SDL_Delay(5000);
+			
 		}
 
 	
@@ -74,11 +89,27 @@ struct SDLApplication {//state is global to my application
 			
 		}
 	}
-	void Update(){}
+	void Update(){
+		for (int i = 0; i < mParticles.mPoints.size(); i++) {
+			mParticles.mPoints[i].y+=0.1f;
+			mParticles.mPoints[i].x += 0.1f;
+		}
+	
+	}
 	void Render(){
 		SDL_Log("x,y %f %f", x, y);
-		SDL_SetRenderDrawColor(mRenderer, y, x, 0, 255); 
-		SDL_RenderPoint(mRenderer, x, y);
+		SDL_SetRenderDrawColor(mRenderer, 0, 0xAA, 0xFF, 255);
+		SDL_RenderClear(mRenderer);
+		SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 255); 
+		SDL_RenderLine(mRenderer,0.0f,0.0f,100.0f,50.0f);
+		SDL_FRect rect{
+		100.0f,
+		50,
+		100,
+		100
+		};
+		SDL_RenderRect(mRenderer, &rect);
+		SDL_RenderPoints(mRenderer, mParticles.mPoints.data(), mParticles.mPoints.size());
 		SDL_RenderPresent(mRenderer);
 	
 	}
@@ -87,7 +118,7 @@ struct SDLApplication {//state is global to my application
 		while (mGameRunning) {
 			Uint64 currentTick = SDL_GetTicks();
 			Tick();
-			SDL_Delay(16);
+			
 			fps ++;
 			
 			Uint64 deltaTime = SDL_GetTicks() -currentTick;
