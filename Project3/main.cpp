@@ -6,7 +6,7 @@ struct Particles {
 		float speed;
 		float velocity;
 		void Randomize() {
-			speed = 3.0f + static_cast<float>(SDL_rand(5));
+			speed = 1.0f + static_cast<float>(SDL_rand(10));
 			velocity = 1.0f+static_cast<float>(SDL_rand(180));
 		}
 	};
@@ -37,7 +37,7 @@ struct SDLApplication {//state is global to my application
 	int color;
 	int color2;
 	float x, y;
-	Particles mParticleSystem{ 1000 };
+	Particles mParticleSystem{ 10000 };
 	SDLApplication(const char* title) { //constructor
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
@@ -52,6 +52,7 @@ struct SDLApplication {//state is global to my application
 			{
 				SDL_Log("%d. %s", i + i, SDL_GetRenderDriver(i));
 			}
+			SDL_SetRenderLogicalPresentation(mRenderer,320,240, SDL_LOGICAL_PRESENTATION_STRETCH);
 		}
 	}
 	~SDLApplication() {//Destructor
@@ -97,16 +98,16 @@ struct SDLApplication {//state is global to my application
 	}
 	void Update(){
 		for (int i = 0; i < mParticleSystem.mParticles.size(); i++) {
-			mParticleSystem.mPoints[i].y += mParticleSystem.mParticles[i].speed * .2f;
+			mParticleSystem.mPoints[i].y += mParticleSystem.mParticles[i].speed * .01f;
 			mParticleSystem.mPoints[i].x += SDL_sinf(mParticleSystem.mParticles[i].velocity) * .5f;
 			mParticleSystem.mParticles[i].velocity += 0.1f;
 			if (mParticleSystem.mPoints[i].y > 240) {
-				mParticleSystem.mPoints[i].y = -120;
+				
 				mParticleSystem.mParticles[i].Randomize();
+				mParticleSystem.mPoints[i].y = -120;
 			}
 			
 		}
-	
 	}
 	void Render(){
 		SDL_Log("x,y %f %f", x, y);
