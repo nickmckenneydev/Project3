@@ -100,11 +100,12 @@ struct SDLApplication {//state is global to my application
 		for (int i = 0; i < mParticleSystem.mParticles.size(); i++) {
 			mParticleSystem.mPoints[i].y += mParticleSystem.mParticles[i].speed * 0.1f;
 			mParticleSystem.mPoints[i].x += SDL_sinf(mParticleSystem.mParticles[i].velocity) * 2.0;
-			if (mParticleSystem.mPoints[i].y > 240) {
-				mParticleSystem.mPoints[i].y = 0;
+		/*	if (mParticleSystem.mPoints[i].y > 240) {
+				mParticleSystem.mPoints[i].y = y;
 				mParticleSystem.mParticles[i].Randomize();
-			}
-
+			}*/
+			mParticleSystem.mPoints[i].y = SDL_rand(y);
+			mParticleSystem.mPoints[i].x = SDL_rand(x);
 		}
 	
 	}
