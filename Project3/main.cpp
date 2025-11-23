@@ -37,7 +37,7 @@ struct SDLApplication {//state is global to my application
 	int color;
 	int color2;
 	float x, y;
-	Particles mParticleSystem{ 10000 };
+	Particles mParticleSystem{ 1000 };
 	SDLApplication(const char* title) { //constructor
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
