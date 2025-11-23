@@ -5,6 +5,10 @@ struct Particles {
 	struct Particle {
 		float speed;
 		float velocity;
+		void Randomize() {
+			speed = static_cast<float>(SDL_rand(10));
+			velocity = static_cast<float>(SDL_rand(180));
+		}
 	};
 	std::vector<SDL_FPoint> mPoints;
 	std::vector<Particle> mParticles;
@@ -12,8 +16,7 @@ struct Particles {
 	Particles(size_t numberOfPoints) {
 		for (int i = 0; i < numberOfPoints; i++) {
 			Particle particle;
-			particle.speed = static_cast<float>(SDL_rand(10));
-			particle.velocity = static_cast<float>(SDL_rand(180));
+			particle.Randomize();
 			SDL_FPoint point = SDL_FPoint{
 				static_cast<float>(SDL_rand(320)),
 				static_cast<float>(SDL_rand(10)),
@@ -95,21 +98,22 @@ struct SDLApplication {//state is global to my application
 	}
 	void Update(){
 		for (int i = 0; i < mParticleSystem.mParticles.size(); i++) {
-			mParticleSystem.mPoints[i].y += mParticleSystem.mParticles[i].speed * 0.01f;
+			mParticleSystem.mPoints[i].y += mParticleSystem.mParticles[i].speed * 0.1f;
+			mParticleSystem.mPoints[i].x += SDL_sinf(mParticleSystem.mParticles[i].velocity) * 2.0;
 			if (mParticleSystem.mPoints[i].y > 240) {
-				mParticleSystem.mPoints[i].y = SDL_rand(50);
+				mParticleSystem.mPoints[i].y = 0;
+				mParticleSystem.mParticles[i].Randomize();
 			}
-			mParticleSystem.mPoints[i].x += SDL_sinf(mParticleSystem.mParticles[i].velocity)*2.0;
-			mParticleSystem.mParticles[i].velocity+=0.1f;
 
 		}
 	
 	}
+
 	void Render(){
 		SDL_Log("x,y %f %f", x, y);
 		SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 255);
 		SDL_RenderClear(mRenderer);
-		SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 255); 
+		SDL_SetRenderDrawColor(mRenderer, SDL_rand(y),SDL_rand(x), SDL_rand(x+y), 255);
 		SDL_RenderLine(mRenderer,0.0f,0.0f,100.0f,50.0f);
 		SDL_FRect rect{
 		100.0f,
