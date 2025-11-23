@@ -12,6 +12,8 @@ struct Particles {
 	Particles(size_t numberOfPoints) {
 		for (int i = 0; i < numberOfPoints; i++) {
 			Particle particle;
+			particle.speed = static_cast<float>(SDL_rand(10));
+			particle.velocity = static_cast<float>(SDL_rand(180));
 			SDL_FPoint point = SDL_FPoint{
 				static_cast<float>(SDL_rand(320)),
 				static_cast<float>(SDL_rand(10)),
@@ -32,7 +34,7 @@ struct SDLApplication {//state is global to my application
 	int color;
 	int color2;
 	float x, y;
-	Particles mParticleSystem{ 100 };
+	Particles mParticleSystem{ 10000 };
 	SDLApplication(const char* title) { //constructor
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
@@ -93,7 +95,13 @@ struct SDLApplication {//state is global to my application
 	}
 	void Update(){
 		for (int i = 0; i < mParticleSystem.mParticles.size(); i++) {
-			mParticleSystem.mPoints[i].y+=0.1f;
+			mParticleSystem.mPoints[i].y += mParticleSystem.mParticles[i].speed * 0.01f;
+			if (mParticleSystem.mPoints[i].y > 240) {
+				mParticleSystem.mPoints[i].y = SDL_rand(50);
+			}
+			mParticleSystem.mPoints[i].x += SDL_sinf(mParticleSystem.mParticles[i].velocity)*2.0;
+			mParticleSystem.mParticles[i].velocity+=0.1f;
+
 		}
 	
 	}
@@ -123,7 +131,6 @@ struct SDLApplication {//state is global to my application
 			Uint64 deltaTime = SDL_GetTicks() -currentTick;
 			if (currentTick > lastTime + 1000) {
 				lastTime = currentTick;
-		
 				std::string title;
 				title += "Nicks - FPS: " + std::to_string(fps);
 				SDL_SetWindowTitle(mWindow, title.c_str());
