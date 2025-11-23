@@ -2,13 +2,11 @@
 #include <string>
 #include <vector>
 struct Particles {
-
 	struct Particle {
 		float speed;
 		float velocity;
 	};
-
-	std::vector<SDL_FPoint>  mPoint;
+	std::vector<SDL_FPoint> mPoints;
 	std::vector<Particle> mParticles;
 
 	Particles(size_t numberOfPoints) {
@@ -18,13 +16,12 @@ struct Particles {
 				static_cast<float>(SDL_rand(320)),
 				static_cast<float>(SDL_rand(10)),
 			};
-			mParticles.push_back(point);
 			mParticles.push_back(particle);
+			mPoints.push_back(point);
 		}
 	}
 };
 struct SDLApplication {//state is global to my application
-
 	SDL_Window* mWindow;
 	bool mGameRunning = true;
 	unsigned int lastTime = 0;
@@ -36,17 +33,13 @@ struct SDLApplication {//state is global to my application
 	int color2;
 	float x, y;
 	Particles mParticleSystem{ 100 };
-	
 	SDLApplication(const char* title) { //constructor
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
-		
 		mRenderer = SDL_CreateRenderer(mWindow, "opengl");
 		Particles mParticleSystem{ 100 };
-
 		if (mRenderer == nullptr)
 		{
-
 		}
 		else {
 			SDL_Log("Renderer is %s: ",SDL_GetRendererName(mRenderer));
@@ -55,10 +48,7 @@ struct SDLApplication {//state is global to my application
 			{
 				SDL_Log("%d. %s", i + i, SDL_GetRenderDriver(i));
 			}
-			
 		}
-
-	
 	}
 	~SDLApplication() {//Destructor
 		SDL_Quit();
@@ -103,13 +93,13 @@ struct SDLApplication {//state is global to my application
 	}
 	void Update(){
 		for (int i = 0; i < mParticleSystem.mParticles.size(); i++) {
-			mParticleSystem.mParticles[i].mPoint.y+=0.1f;
+			mParticleSystem.mPoints[i].y+=0.1f;
 		}
 	
 	}
 	void Render(){
 		SDL_Log("x,y %f %f", x, y);
-		SDL_SetRenderDrawColor(mRenderer, 0, 0xAA, 0xFF, 255);
+		SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 255);
 		SDL_RenderClear(mRenderer);
 		SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 255); 
 		SDL_RenderLine(mRenderer,0.0f,0.0f,100.0f,50.0f);
@@ -120,7 +110,7 @@ struct SDLApplication {//state is global to my application
 		100
 		};
 		SDL_RenderRect(mRenderer, &rect);
-		SDL_RenderPoints(mRenderer, mParticleSystem.mParticles.data(), mParticleSystem.mParticles.size());
+		SDL_RenderPoints(mRenderer, mParticleSystem.mPoints.data(), mParticleSystem.mParticles.size());
 		SDL_RenderPresent(mRenderer);
 	
 	}
@@ -129,13 +119,11 @@ struct SDLApplication {//state is global to my application
 		while (mGameRunning) {
 			Uint64 currentTick = SDL_GetTicks();
 			Tick();
-			
 			fps ++;
-			
 			Uint64 deltaTime = SDL_GetTicks() -currentTick;
 			if (currentTick > lastTime + 1000) {
 				lastTime = currentTick;
-			
+		
 				std::string title;
 				title += "Nicks - FPS: " + std::to_string(fps);
 				SDL_SetWindowTitle(mWindow, title.c_str());
