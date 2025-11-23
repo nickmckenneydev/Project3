@@ -6,8 +6,8 @@ struct Particles {
 		float speed;
 		float velocity;
 		void Randomize() {
-			speed = static_cast<float>(SDL_rand(10));
-			velocity = static_cast<float>(SDL_rand(180));
+			speed = 3.0f + static_cast<float>(SDL_rand(5));
+			velocity = 1.0f+static_cast<float>(SDL_rand(180));
 		}
 	};
 	std::vector<SDL_FPoint> mPoints;
@@ -19,7 +19,7 @@ struct Particles {
 			particle.Randomize();
 			SDL_FPoint point = SDL_FPoint{
 				static_cast<float>(SDL_rand(320)),
-				static_cast<float>(SDL_rand(10)),
+				static_cast<float>(SDL_rand(10))-120,
 			};
 			mParticles.push_back(particle);
 			mPoints.push_back(point);
@@ -42,7 +42,6 @@ struct SDLApplication {//state is global to my application
 		SDL_Init(SDL_INIT_VIDEO);
 		mWindow = SDL_CreateWindow(title, 320, 240, SDL_WINDOW_RESIZABLE);
 		mRenderer = SDL_CreateRenderer(mWindow, "opengl");
-		Particles mParticleSystem{ 100 };
 		if (mRenderer == nullptr)
 		{
 		}
@@ -98,31 +97,22 @@ struct SDLApplication {//state is global to my application
 	}
 	void Update(){
 		for (int i = 0; i < mParticleSystem.mParticles.size(); i++) {
-			mParticleSystem.mPoints[i].y += mParticleSystem.mParticles[i].speed * 0.1f;
-			mParticleSystem.mPoints[i].x += SDL_sinf(mParticleSystem.mParticles[i].velocity) * 2.0;
-		/*	if (mParticleSystem.mPoints[i].y > 240) {
-				mParticleSystem.mPoints[i].y = y;
+			mParticleSystem.mPoints[i].y += mParticleSystem.mParticles[i].speed * .2f;
+			mParticleSystem.mPoints[i].x += SDL_sinf(mParticleSystem.mParticles[i].velocity) * .5f;
+			mParticleSystem.mParticles[i].velocity += 0.1f;
+			if (mParticleSystem.mPoints[i].y > 240) {
+				mParticleSystem.mPoints[i].y = -120;
 				mParticleSystem.mParticles[i].Randomize();
-			}*/
-			mParticleSystem.mPoints[i].y = SDL_rand(y);
-			mParticleSystem.mPoints[i].x = SDL_rand(x);
+			}
+			
 		}
 	
 	}
-
 	void Render(){
 		SDL_Log("x,y %f %f", x, y);
 		SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 255);
 		SDL_RenderClear(mRenderer);
-		SDL_SetRenderDrawColor(mRenderer, SDL_rand(y),SDL_rand(x), SDL_rand(x+y), 255);
-		SDL_RenderLine(mRenderer,0.0f,0.0f,100.0f,50.0f);
-		SDL_FRect rect{
-		100.0f,
-		50,
-		100,
-		100
-		};
-		SDL_RenderRect(mRenderer, &rect);
+		SDL_SetRenderDrawColor(mRenderer, 0xFF, 0xFF, 0xFF, 255);
 		SDL_RenderPoints(mRenderer, mParticleSystem.mPoints.data(), mParticleSystem.mParticles.size());
 		SDL_RenderPresent(mRenderer);
 	
